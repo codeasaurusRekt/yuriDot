@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+                                                 >
+
+    <Button
+
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:id="@+id/btnDropDot"
+            android:background="@drawable/roundedbutton"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="▼"
+            android:textSize="90dp"
+            android:textColor="#fff"
+            android:layout_marginLeft="250dp"
+            android:layout_marginTop="550dp"
+    />
+
+    <include layout="@layout/drawer"/>
+    <include layout="@layout/bottom_sheet" />
+
+</android.support.design.widget.CoordinatorLayout>
