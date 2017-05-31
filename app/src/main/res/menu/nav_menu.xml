@@ -4,18 +4,17 @@
                 android:id="@+id/nav_profile"
                 android:title="Profile" />
         <item
-                android:id="@+id/nav_trending"
-                android:title="Trending" />
-        <item
                 android:id="@+id/nav_search"
                 android:title="Search" />
     </group>
-    <item android:title="Sub items">
+    <item android:title="Trending">
         <menu>
             <item
-                    android:title="Sub item 1" />
+                    android:title="Top" />
             <item
-                    android:title="Sub item 2" />
+                    android:title="Highest Rated" />
+            <item
+                    android:title="Most Recent" />
         </menu>
     </item>
 </menu>

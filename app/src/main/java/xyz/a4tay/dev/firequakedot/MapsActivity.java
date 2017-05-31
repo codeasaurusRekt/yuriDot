@@ -73,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             try
                 {
-                JSONArray dotArray = dotFun.getURL(getParam).getJSONArray("locations");
+                JSONArray dotArray = RestfulDot.getURL(getParam).getJSONArray("locations");
 
                 for (int i = 0; i < dotArray.length(); i++)
                     {
@@ -151,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     try
                         {
 //                        Toast.makeText(MapsActivity.this, dotFun.postURL("http://dev.4tay.xyz:8080/yuri/api/location?" + dotFun.getPostDataString(dotParam)), Toast.LENGTH_LONG).show();
-                        dotFun.postURL("http://dev.4tay.xyz:8080/yuri/api/location?" + dotFun.getPostDataString(dotParam));
+                        RestfulDot.postURL("http://dev.4tay.xyz:8080/yuri/api/location?" + RestfulDot.getPostDataString(dotParam));
                         }
                     catch(java.lang.Exception e)
                         {
@@ -169,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     try
                         {
-                        JSONArray dotArray = dotFun.getURL(getParam).getJSONArray("locations");
+                        JSONArray dotArray = RestfulDot.getURL(getParam).getJSONArray("locations");
 
                         for (int i = 0; i < dotArray.length(); i++)
                             {
