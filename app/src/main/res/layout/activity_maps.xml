@@ -11,14 +11,17 @@
             android:layout_width="190dp"
             android:layout_height="190dp"
             android:id="@+id/btnDropDot"
-            android:background="@drawable/roundedbutton"
+            android:background="@drawable/btndropdot"
             android:gravity="center_vertical|center_horizontal"
             android:text="▼"
             android:textSize="90dp"
             android:textColor="#fff"
-            android:layout_marginLeft="250dp"
-            android:layout_marginTop="550dp"
-    />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="-28dp"
+            android:layout_marginBottom="-28dp"
+            android:longClickable="true"/>
 
     <include layout="@layout/drawer"/>
     <include layout="@layout/bottom_sheet" />
