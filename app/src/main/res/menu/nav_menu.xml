@@ -10,10 +10,13 @@
     <item android:title="Trending">
         <menu>
             <item
-                    android:title="Top" />
+                    android:id="@+id/most_popular"
+                    android:title="Most Popular" />
             <item
-                    android:title="Highest Rated" />
+                    android:id="@+id/top_rated"
+                    android:title="Top Rated" />
             <item
+                    android:id="@+id/most_recent"
                     android:title="Most Recent" />
         </menu>
     </item>

@@ -32,7 +32,7 @@ public class RestfulDot
 
     private static final String LOG_TAG = RestfulDot.class.getSimpleName();
 
-    public static String getPostDataString(JSONObject params) throws Exception
+    public static String getPutDataString(JSONObject params) throws Exception
         {
 
         StringBuilder result = new StringBuilder();
@@ -58,7 +58,7 @@ public class RestfulDot
         return result.toString();
         }
 
-    public static String postURL(String stringURL)
+    public static String putURL(String stringURL)
         {
         try
             {
@@ -73,7 +73,7 @@ public class RestfulDot
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
-            //writer.write(getPostDataString(params));
+            //writer.write(getPutDataString(params));
 
             Log.d(LOG_TAG, writer.toString());
 
