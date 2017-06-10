@@ -88,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             try
                 {
-                JSONArray dotArray = dotFun.getURL(getParam).getJSONArray("locations");
+                JSONArray dotArray = RestfulDot.getURL(getParam).getJSONArray("locations");
                 final LinearLayout lotsOfHash = (LinearLayout) findViewById(R.id.bottomSheet);
                 lotsOfHash.removeAllViews();
                 lotsOfHash.setOrientation(LinearLayout.VERTICAL);
@@ -102,23 +102,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     int dotColor = eachDot.getInt("colorCode");
                     Marker addDot;
                     String hash = eachDot.getString("hash");
-                    Location dotLocation = new Location("");
+                    final Location dotLocation = new Location("");
                     dotLocation.setLatitude(dotLat);
                     dotLocation.setLongitude(dotLng);
                     float detailDistance = lastKnownLocation.distanceTo(dotLocation);
 
                     if (!hash.equals("emptyHash"))
                         {
-                        TextView hashEntry = new TextView(this);
+                        final TextView hashEntry = new TextView(this);
                         hashEntry.setText(hash);
                         hashEntry.setTextSize(25);
-                        hashEntry.setPadding(10, 10, 100, 10);
+                        hashEntry.setPadding(10, 5, 100, 10);
                         lotsOfHash.addView(hashEntry);
                         TextView details = new TextView(this);
                         details.setText(detailDistance + " meters away");
                         details.setTextSize(15);
                         details.setPadding(70, 10, 100, 100);
                         lotsOfHash.addView(details);
+                        hashEntry.setOnClickListener(new View.OnClickListener()
+                            {
+                            public void onClick(View v)
+                                {mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dotMarker, 17.0f));}});
                         }
 
                     switch (dotColor)
@@ -275,7 +279,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     try
                         {
 //                        Toast.makeText(MapsActivity.this, dotFun.putURL("http://dev.4tay.xyz:8080/yuri/api/location?" + dotFun.getPutDataString(dotParam)), Toast.LENGTH_LONG).show();
-                        dotFun.putURL("http://dev.4tay.xyz:8080/yuri/api/location?" + dotFun.getPutDataString(dotParam));
+                        RestfulDot.putURL("http://dev.4tay.xyz:8080/yuri/api/location?" + RestfulDot.getPutDataString(dotParam));
                         } catch (java.lang.Exception e)
                         {
                         Toast.makeText(MapsActivity.this, "java.lang exception, y'all", Toast.LENGTH_LONG).show();
@@ -293,7 +297,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     try
                         {
-                        JSONArray dotArray = dotFun.getURL(getParam).getJSONArray("locations");
+                        JSONArray dotArray = RestfulDot.getURL(getParam).getJSONArray("locations");
 
                         final LinearLayout lotsOfHash = (LinearLayout) findViewById(R.id.bottomSheet);
                         lotsOfHash.removeAllViews();
@@ -304,7 +308,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             JSONObject eachDot = dotArray.getJSONObject(i);
                             Double dotLat = eachDot.getDouble("lat");
                             Double dotLng = eachDot.getDouble("lng");
-                            LatLng dotMarker = new LatLng(dotLat, dotLng);
+                            final LatLng dotMarker = new LatLng(dotLat, dotLng);
                             int dotColor = eachDot.getInt("colorCode");
                             Marker addDot;
                             String hash = eachDot.getString("hash");
@@ -313,9 +317,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 TextView hashEntry = new TextView(MapsActivity.this);
                                 hashEntry.setText(hash);
                                 hashEntry.setTextSize(25);
-                                hashEntry.setPadding(10, 10, 100, 10);
+                                hashEntry.setPadding(10, 5, 100, 10);
                                 lotsOfHash.addView(hashEntry);
-
                                 TextView details = new TextView(MapsActivity.this);
                                 Location dotLocation = new Location("");
                                 dotLocation.setLatitude(dotLat);
@@ -325,6 +328,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 details.setTextSize(15);
                                 details.setPadding(70, 10, 100, 100);
                                 lotsOfHash.addView(details);
+                                hashEntry.setOnClickListener(new View.OnClickListener()
+                                    {
+                                    public void onClick(View v)
+                                        {mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dotMarker, 17.0f));}});
                                 }
 
                             switch (dotColor)
@@ -500,7 +507,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             try
                                 {
 //                        Toast.makeText(MapsActivity.this, dotFun.putURL("http://dev.4tay.xyz:8080/yuri/api/location?" + dotFun.getPutDataString(dotParam)), Toast.LENGTH_LONG).show();
-                                dotFun.putURL("http://dev.4tay.xyz:8080/yuri/api/location?" + dotFun.getPutDataString(dotParam));
+                                RestfulDot.putURL("http://dev.4tay.xyz:8080/yuri/api/location?" + RestfulDot.getPutDataString(dotParam));
                                 } catch (java.lang.Exception e)
                                 {
                                 Toast.makeText(MapsActivity.this, "java.lang exception, y'all", Toast.LENGTH_LONG).show();
@@ -518,7 +525,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             try
                                 {
-                                JSONArray dotArray = dotFun.getURL(getParam).getJSONArray("locations");
+                                JSONArray dotArray = RestfulDot.getURL(getParam).getJSONArray("locations");
                                 final LinearLayout lotsOfHash = (LinearLayout) findViewById(R.id.bottomSheet);
                                 lotsOfHash.removeAllViews();
                                 lotsOfHash.setOrientation(LinearLayout.VERTICAL);
@@ -527,7 +534,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     JSONObject eachDot = dotArray.getJSONObject(i);
                                     Double dotLat = eachDot.getDouble("lat");
                                     Double dotLng = eachDot.getDouble("lng");
-                                    LatLng dotMarker = new LatLng(dotLat, dotLng);
+                                    final LatLng dotMarker = new LatLng(dotLat, dotLng);
                                     int dotColor = eachDot.getInt("colorCode");
                                     Marker addDot;
                                     String hash = eachDot.getString("hash");
@@ -536,7 +543,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         TextView hashEntry = new TextView(MapsActivity.this);
                                         hashEntry.setText(hash);
                                         hashEntry.setTextSize(25);
-                                        hashEntry.setPadding(10, 10, 100, 10);
+                                        hashEntry.setPadding(10, 5, 100, 10);
                                         lotsOfHash.addView(hashEntry);
 
                                         TextView details = new TextView(MapsActivity.this);
@@ -548,6 +555,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         details.setTextSize(15);
                                         details.setPadding(70, 10, 100, 100);
                                         lotsOfHash.addView(details);
+                                        hashEntry.setOnClickListener(new View.OnClickListener()
+                                            {
+                                            public void onClick(View v)
+                                                {mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dotMarker, 17.0f));}});
                                         }
 
                                     switch (dotColor)
