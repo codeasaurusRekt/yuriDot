@@ -3,6 +3,7 @@ package xyz.a4tay.dev.firequakedot;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.format.Time;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -40,7 +42,7 @@ import java.util.Random;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
     private GoogleMap mMap;
-    private BottomSheetBehavior mBottomSheetBehavior;
+
     public static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
@@ -51,12 +53,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        }
 
+    public void onSettingsClick(MenuItem item)
+        {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
         }
 
     @Override
