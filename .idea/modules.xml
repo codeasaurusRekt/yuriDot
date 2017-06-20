@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FirequakeDot.iml" filepath="$PROJECT_DIR$/FirequakeDot.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yuriDot.iml" filepath="$PROJECT_DIR$/yuriDot.iml" />
       <module fileurl="file://C:\Users\Daniel Montilla\workspace\FirequakeDot\yuriDot.iml" filepath="C:\Users\Daniel Montilla\workspace\FirequakeDot\yuriDot.iml" />
     </modules>
   </component>

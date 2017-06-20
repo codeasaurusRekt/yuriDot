@@ -29,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.*;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +45,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
     private GoogleMap mMap;
     private ClusterManager<MyItem> mClusterManager;
-
     public static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
@@ -66,42 +66,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent);
         }
 
-    private void setUpClusterer() {
-    // Position the map.
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
-
-    // Initialize the manager with the context and the map.
-    // (Activity extends context, so we can pass 'this' in the constructor.)
-    mClusterManager = new ClusterManager<MyItem>(this, mMap);
-
-    // Point the map's listeners at the listeners implemented by the cluster
-    // manager.
-//    mMap.setOnCameraIdleListener(mClusterManager);
-    mMap.setOnMarkerClickListener(mClusterManager);
-
-    // Add cluster items (markers) to the cluster manager.
-    addItems();
-    }
-
-    private void addItems()
-        {
-
-        // Set some lat/lng coordinates to start with.
-        double lat = 51.5145160;
-        double lng = -0.1270060;
-
-        // Add ten cluster items in close proximity, for purposes of this example.
-        for (int i = 0; i < 10; i++)
-            {
-            double offset = i / 60d;
-            lat = lat + offset;
-            lng = lng + offset;
-            MyItem offsetItem = new MyItem(lat, lng);
-            mClusterManager.addItem(offsetItem);
-            }
-        }
-
-
     @Override
     public void onMapReady(GoogleMap googleMap)
         {
@@ -119,7 +83,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             final View dropDot = findViewById(R.id.btnDropDot);
             final RestfulDot dotFun = new RestfulDot();
             JSONObject getParam = new JSONObject();
-
+            mClusterManager = new ClusterManager<>(this, mMap);
+            mMap.setOnCameraIdleListener(mClusterManager);
+            List<MyItem> items = new ArrayList<MyItem>();
             try
                 {
                 getParam.put("lat", String.valueOf(lastKnownLocation.getLatitude()));
@@ -149,8 +115,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     dotLocation.setLatitude(dotLat);
                     dotLocation.setLongitude(dotLng);
                     float detailDistance = lastKnownLocation.distanceTo(dotLocation);
+                    String clusterDotSnippet = ""+detailDistance;
 
-                    if (!hash.equals("emptyHash"))
+                    if (!hash.equals("#emptyHash"))
                         {
                         final TextView hashEntry = new TextView(this);
                         hashEntry.setText(hash);
@@ -163,118 +130,134 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         details.setPadding(70, 10, 100, 100);
                         lotsOfHash.addView(details);
                         hashEntry.setOnClickListener(new View.OnClickListener()
+
                             {
                             public void onClick(View v)
                                 {mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dotMarker, 17.0f));}});
                         }
 
-                    switch (dotColor)
-                        {
-                        case 1:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)));
-                                }
-                            break;
-                        case 2:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.reddot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.reddot)));
-                                }
-                            break;
-                        case 3:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.greendot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.greendot)));
-                                }
-                            break;
-                        case 4:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.yellowdot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.yellowdot)));
-                                }
-                            break;
-                        case 5:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.orangedot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.orangedot)));
-                                }
-                            break;
-                        case 6:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.pinkdot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.pinkdot)));
-                                }
-                            break;
-                        case 7:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.purpledot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.purpledot)));
-                                }
-                            break;
-                        case 8:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.navydot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.navydot)));
-                                }
-                            break;
-                        default:
-                            if (!hash.equals("emptyHash"))
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
-                                addDot.showInfoWindow();
-                                }
-                            else
-                                {
-                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)));
-                                }
-                            break;
-                        }
+                    items.add(new MyItem(dotLat, dotLng, hash, clusterDotSnippet));
+                    mClusterManager.addItems(items);
+//                    switch (dotColor)
+//                        {
+//                        case 1:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)));
+//                                }
+//                            break;
+//                        case 2:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.reddot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.reddot)));
+//                                }
+//                            break;
+//                        case 3:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.greendot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.greendot)));
+//                                }
+//                            break;
+//                        case 4:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.yellowdot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.yellowdot)));
+//                                }
+//                            break;
+//                        case 5:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.orangedot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.orangedot)));
+//                                }
+//                            break;
+//                        case 6:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.pinkdot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.pinkdot)));
+//                                }
+//                            break;
+//                        case 7:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.purpledot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.purpledot)));
+//                                }
+//                            break;
+//                        case 8:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.navydot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.navydot)));
+//                                }
+//                            break;
+//                        default:
+//                            if (!hash.equals("#emptyHash"))
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
+//                                addDot.showInfoWindow();
+//                                }
+//                            else
+//                                {
+//                                addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)));
+//                                }
+//                            break;
+//                        }
                     }
                 } catch (java.lang.Exception e)
                 {
                 Toast.makeText(MapsActivity.this, e.toString(), Toast.LENGTH_LONG).show();
                 }
+
+            mClusterManager
+                    .setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
+                    @Override
+                    public boolean onClusterClick(final Cluster<MyItem> cluster) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            cluster.getPosition(), (float) Math.floor(mMap
+                                    .getCameraPosition().zoom + 1)), 300,
+                            null);
+                    return true;
+                    }
+                    });
+
 
             dropDot.setOnClickListener(new View.OnClickListener()
                 {
@@ -300,16 +283,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     JSONObject dotParam = new JSONObject();
                     JSONObject getParam = new JSONObject();
                     Random randID = new Random();
-                    SharedPreferences prfs = getSharedPreferences("Test", Context.MODE_PRIVATE);
-                    String oldDotID = prfs.getString("VALUE", lat + randID.nextInt(99) + lon + randID.nextInt(99) + dTime.format2445().toString());
-                    String potentialDotID = lat + randID.nextInt(99) + lon + randID.nextInt(99) + dTime.format2445().toString();
+//                    SharedPreferences prfs = getSharedPreferences("Test", Context.MODE_PRIVATE);
+                    Integer oldDotID = 1;
+//                    String potentialDotID = lat + randID.nextInt(99) + lon + randID.nextInt(99) + dTime.format2445().toString();
                     String newDotHash = "";
                     int colorCode = randID.nextInt(9);
 
                     try
                         {
                         dotParam.put("oldDotID", oldDotID);
-                        dotParam.put("potentialDotID", potentialDotID);
+//                        dotParam.put("potentialDotID", potentialDotID);
                         dotParam.put("lat", String.valueOf(lat));
                         dotParam.put("lng", String.valueOf(lon));
                         dotParam.put("hash", newDotHash);
@@ -355,7 +338,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             int dotColor = eachDot.getInt("colorCode");
                             Marker addDot;
                             String hash = eachDot.getString("hash");
-                            if (!hash.equals("emptyHash"))
+                            if (!hash.equals("#emptyHash"))
                                 {
                                 TextView hashEntry = new TextView(MapsActivity.this);
                                 hashEntry.setText(hash);
@@ -380,7 +363,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             switch (dotColor)
                                 {
                                 case 1:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
                                         addDot.showInfoWindow();
@@ -391,7 +374,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 case 2:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.reddot)).title(hash));
                                         addDot.showInfoWindow();
@@ -402,7 +385,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 case 3:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.greendot)).title(hash));
                                         addDot.showInfoWindow();
@@ -413,7 +396,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 case 4:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.yellowdot)).title(hash));
                                         addDot.showInfoWindow();
@@ -424,7 +407,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 case 5:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.orangedot)).title(hash));
                                         addDot.showInfoWindow();
@@ -435,7 +418,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 case 6:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.pinkdot)).title(hash));
                                         addDot.showInfoWindow();
@@ -446,7 +429,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 case 7:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.purpledot)).title(hash));
                                         addDot.showInfoWindow();
@@ -457,7 +440,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 case 8:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.navydot)).title(hash));
                                         addDot.showInfoWindow();
@@ -468,7 +451,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         }
                                     break;
                                 default:
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
                                         addDot.showInfoWindow();
@@ -581,7 +564,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     int dotColor = eachDot.getInt("colorCode");
                                     Marker addDot;
                                     String hash = eachDot.getString("hash");
-                                    if (!hash.equals("emptyHash"))
+                                    if (!hash.equals("#emptyHash"))
                                         {
                                         TextView hashEntry = new TextView(MapsActivity.this);
                                         hashEntry.setText(hash);
@@ -607,7 +590,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     switch (dotColor)
                                         {
                                         case 1:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -618,7 +601,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         case 2:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.reddot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -629,7 +612,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         case 3:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.greendot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -640,7 +623,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         case 4:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.yellowdot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -651,7 +634,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         case 5:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.orangedot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -662,7 +645,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         case 6:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.pinkdot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -673,7 +656,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         case 7:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.purpledot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -684,7 +667,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         case 8:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.navydot)).title(hash));
                                                 addDot.showInfoWindow();
@@ -695,7 +678,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             break;
                                         default:
-                                            if (!hash.equals("emptyHash"))
+                                            if (!hash.equals("#emptyHash"))
                                                 {
                                                 addDot = mMap.addMarker(new MarkerOptions().position(dotMarker).icon(BitmapDescriptorFactory.fromResource(R.drawable.bluedot)).title(hash));
                                                 addDot.showInfoWindow();
